@@ -5,15 +5,33 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OtpInput from "../../components/OtpInput";
 
 const statusBarHeight = StatusBar.currentHeight || 0;
 const OtpScreen = ({ navigation }: any) => {
-  const [otpFilled, setOtpFilled] = useState<boolean>(false);
+  const otpLength = 4;
+  const [isOtpFilled, setIsOtpFilled] = useState<boolean>(false);
+  const [otp, setOtp] = useState<string[]>(new Array(otpLength).fill(""));
+  const [otpError, setOtpError] = useState<string>("");
 
-  const verifyBtnOpac = (otpFilledStatus: boolean) => {
-    setOtpFilled(otpFilledStatus);
+  useEffect(() => {
+    setOtpError("");
+    if (otp.findIndex((value) => value === "") < 0) {
+      setIsOtpFilled(true);
+    } else {
+      setIsOtpFilled(false);
+    }
+  }, [otp]);
+
+  const onSubmitPress = (): void => {
+    console.log(otp.join(""));
+    if (otp.join("") == "1234") {
+      setOtpError("");
+      navigation.navigate("Welcome");
+    } else {
+      setOtpError("Wrong OTP");
+    }
   };
 
   return (
@@ -28,10 +46,18 @@ const OtpScreen = ({ navigation }: any) => {
           <Text style={styles.loginBtn}>Login</Text>
         </TouchableOpacity>
       </View>
-      <OtpInput length={5} sendOtpFilledStatus={verifyBtnOpac} />
+      {otpError !== "" ? (
+        <Text style={{ color: "red" }}>{otpError}</Text>
+      ) : null}
+
+      {otpLength ? (
+        <OtpInput otp={otp} setOtp={setOtp} otpLength={otpLength} />
+      ) : null}
       <TouchableOpacity
-        style={[styles.submitBtn, { opacity: otpFilled ? 1 : 0.5 }]}
-        disabled={!otpFilled}
+        activeOpacity={0.6}
+        onPress={onSubmitPress}
+        style={[styles.submitBtn, { opacity: isOtpFilled ? 1 : 0.5 }]}
+        disabled={!isOtpFilled}
       >
         <Text style={styles.submitBtnText}>Submit</Text>
       </TouchableOpacity>

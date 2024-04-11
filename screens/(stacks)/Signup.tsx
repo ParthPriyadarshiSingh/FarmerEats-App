@@ -9,27 +9,17 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
+import SignupPhoneInput from "../../components/SignupPhoneInput";
 
 const profileIcon = require("../../assets/images/Group 542x.png");
-const atIcon = require("../../assets/images/Vector1x.png");
-const phoneIcon = require("../../assets/images/Vector1x-2.png");
-const lockIcon = require("../../assets/images/Group 471x.png");
+const atIcon = require("../../assets/images/Vector2x.png");
+const lockIcon = require("../../assets/images/Group 472x.png");
 const googleLogo = require("../../assets/images/google.png");
 const appleLogo = require("../../assets/images/icons8-apple-logo 11x.png");
 const fbLogo = require("../../assets/images/Group 521x.png");
 const { height } = Dimensions.get("window");
 
 const Signup = ({ navigation }: any) => {
-  // const signupDetails = {
-  //   full_name: "",
-  //   email: "",
-  //   phone: "",
-  //   password: "",
-  //   role: "farmer",
-  // };
-
-  // const [signupDetails, setSignupDetails] = useState<object>({});
-
   const [msg, setMsg] = useState<string>("");
   const [fullName, setfullName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -44,10 +34,6 @@ const Signup = ({ navigation }: any) => {
       phone: phone,
       password: password,
     };
-    // const updatedSignupDetails = { ...signupDetails, ...newDetails };
-    // setSignupDetails(updatedSignupDetails);
-    // console.log(updatedSignupDetails);
-    console.log(signupDetails);
     if (passwordRetyped === password) {
       navigation.navigate("FarmInfo", { signupDetails });
     } else {
@@ -61,7 +47,7 @@ const Signup = ({ navigation }: any) => {
   return (
     <KeyboardAvoidingWrapper>
       <View style={styles.container}>
-        <Text style={[styles.appName, { marginTop: 40 }]}>FarmerEats</Text>
+        <Text style={[styles.appName, { marginTop: 40 }]}>My-App</Text>
         <Text style={styles.signup}>Signup 1 of 4</Text>
         <Text style={styles.welcome}>Welcome!</Text>
         <View style={styles.loginOptionsContainer}>
@@ -104,19 +90,7 @@ const Signup = ({ navigation }: any) => {
             value={email}
           ></TextInput>
         </View>
-        <View>
-          <Image
-            source={phoneIcon}
-            style={styles.inputIcon}
-            resizeMode="contain"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Phone Number"
-            onChangeText={(input) => setPhone(input)}
-            value={phone}
-          ></TextInput>
-        </View>
+        <SignupPhoneInput phone={phone} setPhone={setPhone} />
         <View>
           <Image
             source={lockIcon}
@@ -137,7 +111,7 @@ const Signup = ({ navigation }: any) => {
             resizeMode="contain"
           />
           <TextInput
-            style={[styles.input, { borderColor: "red", borderWidth: 1.5 }]}
+            style={[styles.input]}
             placeholder="Re-enter Password"
             value={passwordRetyped}
             onChangeText={(input) => setPasswordRetyped(input)}
@@ -233,9 +207,9 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     alignSelf: "center",
-
+    fontSize: 20,
     backgroundColor: "#e9e9e9",
-    paddingLeft: 40,
+    paddingLeft: 50,
     marginVertical: 10,
     borderRadius: 10,
     zIndex: 1,
@@ -254,7 +228,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-
     backgroundColor: "#d5715b",
   },
   continueBtnText: {

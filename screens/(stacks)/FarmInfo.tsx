@@ -38,7 +38,6 @@ const FarmInfo = ({ navigation, route }: any) => {
     };
     signupDetails = { ...signupDetails, ...newDetails };
     // setSignupDetails(updatedSignupDetails);
-    console.log(signupDetails);
     navigation.navigate("Verification", { signupDetails });
   };
 

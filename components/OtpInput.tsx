@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import {
   View,
   TextInput,
@@ -8,33 +8,25 @@ import {
 } from "react-native";
 
 interface Props {
-  length?: number;
-  sendOtpFilledStatus?: (otpFilledStatus: boolean) => void;
+  otp: string[];
+  setOtp: (otp: string[]) => void;
+  otpLength: number;
 }
 
-const OtpInput = ({ length = 5, sendOtpFilledStatus }: Props) => {
-  const [otp, setOtp] = useState<string[]>(new Array(length).fill(""));
-  const otpInputRefs = useRef<TextInput[]>(Array(length).fill(null));
-
-  const passOtpArray = (updatedOTP: string[]) => {
-    if (sendOtpFilledStatus) {
-      if (updatedOTP.findIndex((value) => value === "") < 0) {
-        sendOtpFilledStatus(true);
-      } else {
-        sendOtpFilledStatus(false);
-      }
-    }
-  };
+const OtpInput = ({ otp, setOtp, otpLength }: Props) => {
+  const otpInputRefs = useRef<TextInput[]>(new Array(otpLength).fill(null));
 
   const handleOTPInputChange = (text: string, index: number): void => {
     const updatedOtp = [...otp];
     updatedOtp[index] = text;
     setOtp(updatedOtp);
-
-    if (text !== "" && index < length - 1 && otpInputRefs.current[index + 1]) {
+    if (
+      text !== "" &&
+      index < otpLength - 1 &&
+      otpInputRefs.current[index + 1]
+    ) {
       otpInputRefs.current[index + 1]?.focus();
     }
-    passOtpArray(updatedOtp);
   };
 
   const handleOTPInputKeyPress = (

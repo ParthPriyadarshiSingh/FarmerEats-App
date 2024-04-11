@@ -51,9 +51,6 @@ const BusinessHours = ({ navigation }: any) => {
     Array(5).fill(false)
   );
   const handleDayspress = (index: number): void => {
-    const key = days[index].name;
-    const value = days[index].value;
-
     var newWeek = week;
     newWeek[selectedDay] = [...selectedTime];
     setWeek(newWeek);
