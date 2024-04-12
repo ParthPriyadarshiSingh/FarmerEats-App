@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import LoginPhoneInput from "../../components/LoginPhoneInput";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const atIcon = require("../../assets/images/Vector2x-1.png");
 const lockIcon = require("../../assets/images/Group 472x.png");
@@ -73,85 +74,88 @@ const Login = ({ navigation }: any) => {
   return (
     <KeyboardAvoidingWrapper>
       <View style={styles.container}>
-        <Text style={[styles.appName, { marginTop: 40 }]}>My-App</Text>
-        <Text style={styles.welcome}>Welcome back!</Text>
-        <View style={{ flexDirection: "row", gap: 10, marginBottom: 40 }}>
-          <Text style={styles.newHere}>New here?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-            <Text style={styles.createAccBtn}>Create account</Text>
+        <SafeAreaView style={[styles.container, { paddingHorizontal: 25 }]}>
+          <Text style={[styles.appName]}>FarmerEats</Text>
+          <Text style={styles.welcome}>Welcome back!</Text>
+          <View style={{ flexDirection: "row", gap: 10, marginBottom: 40 }}>
+            <Text style={styles.newHere}>New here?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+              <Text style={styles.createAccBtn}>Create account</Text>
+            </TouchableOpacity>
+          </View>
+          {!isEmailValid ? (
+            <Text style={{ color: "red" }}>{emailError}</Text>
+          ) : null}
+          <View>
+            <Image
+              source={atIcon}
+              style={styles.inputIcon}
+              resizeMode="contain"
+            />
+            <TextInput
+              style={[
+                styles.input,
+                isEmailValid && { borderWidth: 0 },
+                !isEmailValid && { borderWidth: 1.5 },
+              ]}
+              placeholder="Email Address"
+              value={email}
+              onChangeText={(text) => handleEmailInputChange(text)}
+            ></TextInput>
+          </View>
+          {!isPasswordValid ? (
+            <Text style={{ color: "red" }}>{passwordError}</Text>
+          ) : null}
+          <View>
+            <Image
+              source={lockIcon}
+              style={styles.inputIcon}
+              resizeMode="contain"
+            />
+            <TextInput
+              style={[
+                styles.input,
+                isPasswordValid && { borderWidth: 0 },
+                !isPasswordValid && { borderWidth: 1.5 },
+              ]}
+              placeholder="Password"
+              value={password}
+              secureTextEntry
+              onChangeText={(text) => handlePasswordInputChange(text)}
+            ></TextInput>
+            <TouchableOpacity
+              style={styles.forgotBtn}
+              onPress={() => navigation.navigate("ForgotPassword")}
+            >
+              <Text style={styles.forgotBtnText}>Forgot?</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={styles.btn} onPress={onLoginPress}>
+            <Text style={styles.btnText}>Login</Text>
           </TouchableOpacity>
-        </View>
-        {!isEmailValid ? (
-          <Text style={{ color: "red" }}>{emailError}</Text>
-        ) : null}
-        <View>
-          <Image
-            source={atIcon}
-            style={styles.inputIcon}
-            resizeMode="contain"
+          <Text style={styles.orText}>or login with</Text>
+          <LoginPhoneInput
+            email={email}
+            setEmail={setEmail}
+            setPassword={setPassword}
+            setIsEmailValid={setIsEmailValid}
+            setIsPasswordValid={setIsPasswordValid}
+            onVerify={onVerifyPress}
           />
-          <TextInput
-            style={[
-              styles.input,
-              isEmailValid && { borderWidth: 0 },
-              !isEmailValid && { borderWidth: 1.5 },
-            ]}
-            placeholder="Email Address"
-            value={email}
-            onChangeText={(text) => handleEmailInputChange(text)}
-          ></TextInput>
-        </View>
-        {!isPasswordValid ? (
-          <Text style={{ color: "red" }}>{passwordError}</Text>
-        ) : null}
-        <View>
-          <Image
-            source={lockIcon}
-            style={styles.inputIcon}
-            resizeMode="contain"
-          />
-          <TextInput
-            style={[
-              styles.input,
-              isPasswordValid && { borderWidth: 0 },
-              !isPasswordValid && { borderWidth: 1.5 },
-            ]}
-            placeholder="Password"
-            value={password}
-            onChangeText={(text) => handlePasswordInputChange(text)}
-          ></TextInput>
-          <TouchableOpacity
-            style={styles.forgotBtn}
-            onPress={() => navigation.navigate("ForgotPassword")}
-          >
-            <Text style={styles.forgotBtnText}>Forgot?</Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity style={styles.btn} onPress={onLoginPress}>
-          <Text style={styles.btnText}>Login</Text>
-        </TouchableOpacity>
-        <Text style={styles.orText}>or login with</Text>
-        <LoginPhoneInput
-          email={email}
-          setEmail={setEmail}
-          setPassword={setPassword}
-          setIsEmailValid={setIsEmailValid}
-          setIsPasswordValid={setIsPasswordValid}
-          onVerify={onVerifyPress}
-        />
 
-        <Text style={styles.orText}>or login with</Text>
-        <View style={styles.loginOptionsContainer}>
-          <TouchableOpacity style={styles.logoContainer}>
-            <Image source={googleLogo} style={{ width: 25, height: 25 }} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.logoContainer}>
-            <Image source={appleLogo} style={styles.logo} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.logoContainer}>
-            <Image source={fbLogo} style={styles.logo} />
-          </TouchableOpacity>
-        </View>
+          <Text style={styles.orText}>or login with</Text>
+          <View style={styles.loginOptionsContainer}>
+            <TouchableOpacity style={styles.logoContainer}>
+              <Image source={googleLogo} style={{ width: 25, height: 25 }} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.logoContainer}>
+              <Image source={appleLogo} style={styles.logo} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.logoContainer}>
+              <Image source={fbLogo} style={styles.logo} />
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
       </View>
     </KeyboardAvoidingWrapper>
   );
@@ -161,7 +165,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingHorizontal: 25,
     minHeight: height,
   },
   appName: {
@@ -226,12 +229,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-
     backgroundColor: "#d5715b",
   },
   btnText: {
     letterSpacing: 1.1,
-
     fontSize: 24,
     fontWeight: "500",
     color: "#fff",

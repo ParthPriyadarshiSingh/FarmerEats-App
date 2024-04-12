@@ -1,14 +1,8 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  StatusBar,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import OtpInput from "../../components/OtpInput";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const statusBarHeight = StatusBar.currentHeight || 0;
 const OtpScreen = ({ navigation }: any) => {
   const otpLength = 4;
   const [isOtpFilled, setIsOtpFilled] = useState<boolean>(false);
@@ -25,7 +19,6 @@ const OtpScreen = ({ navigation }: any) => {
   }, [otp]);
 
   const onSubmitPress = (): void => {
-    console.log(otp.join(""));
     if (otp.join("") == "1234") {
       setOtpError("");
       navigation.navigate("Welcome");
@@ -36,34 +29,34 @@ const OtpScreen = ({ navigation }: any) => {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.appName, { marginTop: statusBarHeight + 40 }]}>
-        FarmerEats
-      </Text>
-      <Text style={styles.verify}>Verify OTP</Text>
-      <View style={{ flexDirection: "row", gap: 10, marginBottom: 40 }}>
-        <Text style={styles.remember}>Remember your password?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.loginBtn}>Login</Text>
-        </TouchableOpacity>
-      </View>
-      {otpError !== "" ? (
-        <Text style={{ color: "red" }}>{otpError}</Text>
-      ) : null}
+      <SafeAreaView style={[styles.container, { paddingHorizontal: 25 }]}>
+        <Text style={styles.appName}>FarmerEats</Text>
+        <Text style={styles.verify}>Verify OTP</Text>
+        <View style={{ flexDirection: "row", gap: 10, marginBottom: 40 }}>
+          <Text style={styles.remember}>Remember your password?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.loginBtn}>Login</Text>
+          </TouchableOpacity>
+        </View>
+        {otpError !== "" ? (
+          <Text style={{ color: "red" }}>{otpError}</Text>
+        ) : null}
 
-      {otpLength ? (
-        <OtpInput otp={otp} setOtp={setOtp} otpLength={otpLength} />
-      ) : null}
-      <TouchableOpacity
-        activeOpacity={0.6}
-        onPress={onSubmitPress}
-        style={[styles.submitBtn, { opacity: isOtpFilled ? 1 : 0.5 }]}
-        disabled={!isOtpFilled}
-      >
-        <Text style={styles.submitBtnText}>Submit</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={{ alignSelf: "center" }}>
-        <Text style={styles.resendBtnText}>Resend Code</Text>
-      </TouchableOpacity>
+        {otpLength ? (
+          <OtpInput otp={otp} setOtp={setOtp} otpLength={otpLength} />
+        ) : null}
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={onSubmitPress}
+          style={[styles.submitBtn, { opacity: isOtpFilled ? 1 : 0.5 }]}
+          disabled={!isOtpFilled}
+        >
+          <Text style={styles.submitBtnText}>Submit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ alignSelf: "center" }}>
+          <Text style={styles.resendBtnText}>Resend Code</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
     </View>
   );
 };
@@ -72,7 +65,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingHorizontal: 25,
   },
   appName: {
     fontSize: 24,
@@ -96,7 +88,7 @@ const styles = StyleSheet.create({
     color: "#d5715b",
   },
   submitBtn: {
-    width: "90%",
+    width: "100%",
     height: 50,
     marginVertical: 20,
     borderRadius: 25,

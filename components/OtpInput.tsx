@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   View,
   TextInput,
@@ -15,6 +15,10 @@ interface Props {
 
 const OtpInput = ({ otp, setOtp, otpLength }: Props) => {
   const otpInputRefs = useRef<TextInput[]>(new Array(otpLength).fill(null));
+
+  useEffect(() => {
+    otpInputRefs.current[0].focus();
+  }, []);
 
   const handleOTPInputChange = (text: string, index: number): void => {
     const updatedOtp = [...otp];
@@ -61,9 +65,9 @@ const OtpInput = ({ otp, setOtp, otpLength }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
-    padding: 10,
+    paddingVertical: 10,
   },
   input: {
     backgroundColor: "#E9E9E9",

@@ -28,7 +28,7 @@ const Confirmation = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 25,
     alignItems: "center",
   },
   icon: {

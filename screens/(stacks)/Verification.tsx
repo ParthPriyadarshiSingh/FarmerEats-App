@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const cameraIcon = require("../../assets/images/Group 612x.png");
 
@@ -16,62 +17,67 @@ const Verification = ({ navigation, route }: any) => {
       registration_proof: file,
     };
     signupDetails = { ...signupDetails, ...newDetails };
-    console.log(signupDetails);
     navigation.navigate("BusinessHours", { signupDetails });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.appName, { marginTop: 40 }]}>FarmerEats</Text>
-      <Text style={styles.signup}>Signup 3 of 4</Text>
-      <Text style={styles.verification}>Verification</Text>
-      <Text style={styles.inst}>
-        Attached proof of Department of Agriculture registrations i.e. Florida
-        Fresh, USDA Approved, USDA Organic
-      </Text>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <TouchableOpacity onPress={() => setFile("usda_registration.pdf")}>
-          <Text style={styles.attachText}>Attach proof of registration</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconContainer}>
-          <Image source={cameraIcon} style={styles.icon} resizeMode="contain" />
-        </TouchableOpacity>
-      </View>
-      {file && (
-        <View style={styles.fileBox}>
-          <Text
-            style={{
-              textDecorationLine: "underline",
-              fontSize: 16,
-              fontWeight: "400",
-            }}
-          >
-            {file}
-          </Text>
+      <SafeAreaView style={[styles.container, { paddingHorizontal: 25 }]}>
+        <Text style={styles.appName}>FarmerEats</Text>
+        <Text style={styles.signup}>Signup 3 of 4</Text>
+        <Text style={styles.verification}>Verification</Text>
+        <Text style={styles.inst}>
+          Attached proof of Department of Agriculture registrations i.e. Florida
+          Fresh, USDA Approved, USDA Organic
+        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <TouchableOpacity onPress={() => setFile("usda_registration.pdf")}>
-            <Image source={closeIcon} style={styles.closeIcon} />
+            <Text style={styles.attachText}>Attach proof of registration</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconContainer}>
+            <Image
+              source={cameraIcon}
+              style={styles.icon}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
         </View>
-      )}
+        {file && (
+          <View style={styles.fileBox}>
+            <Text
+              style={{
+                textDecorationLine: "underline",
+                fontSize: 16,
+                fontWeight: "400",
+              }}
+            >
+              {file}
+            </Text>
+            <TouchableOpacity onPress={() => setFile("usda_registration.pdf")}>
+              <Image source={closeIcon} style={styles.closeIcon} />
+            </TouchableOpacity>
+          </View>
+        )}
 
-      <View style={styles.btnContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={backIcon}
-            style={{ width: 20, height: 20 }}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.continueBtn} onPress={handleContinue}>
-          <Text style={styles.continueBtnText}>Continue</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.btnContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image
+              source={backIcon}
+              style={{ width: 30, height: 30 }}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.continueBtn} onPress={handleContinue}>
+            <Text style={styles.continueBtnText}>Continue</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     </View>
   );
 };
@@ -80,7 +86,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingHorizontal: 25,
   },
   appName: {
     fontSize: 24,
@@ -142,17 +147,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     position: "absolute",
-    bottom: 30,
+    bottom: 40,
     alignSelf: "center",
   },
   continueBtn: {
     width: "70%",
     height: 50,
-    marginVertical: 20,
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: "center",
+    // alignSelf: "center",
     backgroundColor: "#d5715b",
   },
   continueBtnText: {

@@ -314,7 +314,7 @@ const OnboardingPage = ({ navigation }: any) => {
       // Trigger animation
       Animated.timing(textOpacity, {
         toValue: 1,
-        duration: 300,
+        duration: 100,
         useNativeDriver: true,
       }).start();
     });
@@ -348,35 +348,37 @@ const OnboardingPage = ({ navigation }: any) => {
           <Text style={styles.title}>{slides[currentIndex.current].title}</Text>
           <Text style={styles.info}>{slides[currentIndex.current].info}</Text>
         </Animated.View>
-        <View style={{ flexDirection: "row", height: 60 }}>
-          {slides.map((_, i) => {
-            const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
+        <View style={styles.footer}>
+          <View style={{ flexDirection: "row", height: 60 }}>
+            {slides.map((_, i) => {
+              const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
 
-            const dotWidth = scrollX.interpolate({
-              inputRange,
-              outputRange: [8, 18, 8],
-              extrapolate: "clamp",
-            });
-            return (
-              <Animated.View
-                style={[styles.dot, { width: dotWidth }]}
-                key={i.toString()}
-              />
-            );
-          })}
+              const dotWidth = scrollX.interpolate({
+                inputRange,
+                outputRange: [8, 18, 8],
+                extrapolate: "clamp",
+              });
+              return (
+                <Animated.View
+                  style={[styles.dot, { width: dotWidth }]}
+                  key={i.toString()}
+                />
+              );
+            })}
+          </View>
+          <TouchableOpacity
+            style={[
+              styles.joinBtn,
+              { backgroundColor: currentSlide.backgroundColor },
+            ]}
+            onPress={() => navigation.navigate("Signup")}
+          >
+            <Text style={styles.joinBtnText}>Join the movement!</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.loginBtnText}>Login</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={[
-            styles.joinBtn,
-            { backgroundColor: currentSlide.backgroundColor },
-          ]}
-          onPress={() => navigation.navigate("Signup")}
-        >
-          <Text style={styles.joinBtnText}>Join the movement!</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.loginBtnText}>Login</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -419,6 +421,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 40,
   },
+  footer: {
+    position: "absolute",
+    bottom: 70,
+    width: "100%",
+    alignItems: "center",
+  },
   dot: {
     backgroundColor: "#261C12",
     width: 8,
@@ -430,7 +438,6 @@ const styles = StyleSheet.create({
     width: "70%",
     height: 50,
     borderRadius: 25,
-    marginTop: 10,
     backgroundColor: "#589e5f",
     justifyContent: "center",
     alignItems: "center",

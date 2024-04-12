@@ -51,7 +51,6 @@ const LoginPhoneInput = ({
 
   const handleUpdatePhoneNumber = (text: string) => {
     setPhoneNumber(text);
-    console.log(text);
     if (text !== "") {
       setEmail("");
       setPassword("");
@@ -105,7 +104,7 @@ const LoginPhoneInput = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View>
       <Text style={{ color: "red" }}>{phoneError}</Text>
       <View style={styles.numberContainer}>
         <TouchableOpacity
@@ -197,9 +196,6 @@ const LoginPhoneInput = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    gap: 10,
-  },
   numberContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -217,9 +213,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     paddingLeft: 5,
-  },
-  invalid: {
-    borderWidth: 1.5,
   },
   selectedInput: {
     fontSize: 20,
@@ -271,7 +264,7 @@ const styles = StyleSheet.create({
   btn: {
     width: "100%",
     height: 45,
-    marginVertical: 10,
+    marginVertical: 20,
     borderRadius: 22.5,
     justifyContent: "center",
     alignItems: "center",

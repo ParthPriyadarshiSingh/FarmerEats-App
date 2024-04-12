@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const tagIcon = require("../../assets/images/Group 592x.png");
 const emojiIcon = require("../../assets/images/Group 572x.png");
@@ -37,108 +38,112 @@ const FarmInfo = ({ navigation, route }: any) => {
       zip_code: zipCode,
     };
     signupDetails = { ...signupDetails, ...newDetails };
-    // setSignupDetails(updatedSignupDetails);
     navigation.navigate("Verification", { signupDetails });
   };
 
   return (
     <KeyboardAvoidingWrapper>
       <View style={styles.container}>
-        <Text style={[styles.appName, { marginTop: 40 }]}>FarmerEats</Text>
-        <Text style={styles.signup}>Signup 2 of 4</Text>
-        <Text style={styles.farmInfo}>Farm Info</Text>
-        <View>
-          <Image
-            source={tagIcon}
-            style={styles.inputIcon}
-            resizeMode="contain"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Business Name"
-            onChangeText={(input) => setBusinessName(input)}
-            value={businessName}
-          ></TextInput>
-        </View>
-        <View>
-          <Image
-            source={emojiIcon}
-            style={styles.inputIcon}
-            resizeMode="contain"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Informal Name"
-            onChangeText={(input) => setInformalName(input)}
-            value={informalName}
-          ></TextInput>
-        </View>
-        <View>
-          <Image
-            source={homeIcon}
-            style={styles.inputIcon}
-            resizeMode="contain"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Street Address"
-            onChangeText={(input) => setAddress(input)}
-            value={address}
-          ></TextInput>
-        </View>
-        <View>
-          <Image
-            source={cityIcon}
-            style={styles.inputIcon}
-            resizeMode="contain"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="City"
-            onChangeText={(input) => setCity(input)}
-            value={city}
-          ></TextInput>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginVertical: 10,
-          }}
-        >
-          <View style={{ width: "38%" }}>
+        <SafeAreaView style={[styles.container, { paddingHorizontal: 25 }]}>
+          <Text style={styles.appName}>FarmerEats</Text>
+          <Text style={styles.signup}>Signup 2 of 4</Text>
+          <Text style={styles.farmInfo}>Farm Info</Text>
+          <View>
+            <Image
+              source={tagIcon}
+              style={styles.inputIcon}
+              resizeMode="contain"
+            />
             <TextInput
-              style={styles.stateInput}
-              placeholder="State"
-              onChangeText={(input) => setState(input)}
-              value={state}
+              style={styles.input}
+              placeholder="Business Name"
+              onChangeText={(input) => setBusinessName(input)}
+              value={businessName}
             ></TextInput>
-            <Image
-              source={arrowIcon}
-              style={styles.arrowIcon}
-              resizeMode="contain"
-            />
           </View>
-          <TextInput
-            style={styles.zipcodeInput}
-            placeholder="Enter Zipcode"
-            keyboardType="numeric"
-            onChangeText={(input) => setZipCode(Number(input))}
-            value={zipCode?.toString()}
-          ></TextInput>
-        </View>
-        <View style={styles.btnContainer}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <View>
             <Image
-              source={backIcon}
-              style={{ width: 20, height: 20 }}
+              source={emojiIcon}
+              style={styles.inputIcon}
               resizeMode="contain"
             />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.continueBtn} onPress={handleContinue}>
-            <Text style={styles.continueBtnText}>Continue</Text>
-          </TouchableOpacity>
-        </View>
+            <TextInput
+              style={styles.input}
+              placeholder="Informal Name"
+              onChangeText={(input) => setInformalName(input)}
+              value={informalName}
+            ></TextInput>
+          </View>
+          <View>
+            <Image
+              source={homeIcon}
+              style={styles.inputIcon}
+              resizeMode="contain"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Street Address"
+              onChangeText={(input) => setAddress(input)}
+              value={address}
+            ></TextInput>
+          </View>
+          <View>
+            <Image
+              source={cityIcon}
+              style={styles.inputIcon}
+              resizeMode="contain"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="City"
+              onChangeText={(input) => setCity(input)}
+              value={city}
+            ></TextInput>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginVertical: 10,
+            }}
+          >
+            <View style={{ width: "45%" }}>
+              <TextInput
+                style={styles.stateInput}
+                placeholder="State"
+                onChangeText={(input) => setState(input)}
+                value={state}
+              ></TextInput>
+              <Image
+                source={arrowIcon}
+                style={styles.arrowIcon}
+                resizeMode="contain"
+              />
+            </View>
+            <TextInput
+              style={styles.zipcodeInput}
+              placeholder="Enter Zipcode"
+              keyboardType="numeric"
+              onChangeText={(input) => setZipCode(Number(input))}
+              value={zipCode?.toString()}
+            ></TextInput>
+          </View>
+          <View style={styles.btnContainer}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Image
+                source={backIcon}
+                style={{ width: 30, height: 30 }}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.continueBtn}
+              onPress={handleContinue}
+            >
+              <Text style={styles.continueBtnText}>Continue</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
       </View>
     </KeyboardAvoidingWrapper>
   );
@@ -148,7 +153,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingHorizontal: 25,
     minHeight: height,
   },
   appName: {
@@ -180,7 +184,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     alignSelf: "center",
-
     backgroundColor: "#e9e9e9",
     paddingLeft: 40,
     marginVertical: 10,
@@ -188,7 +191,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   stateInput: {
-    width: "100%",
+    width: "85%",
     height: 50,
     backgroundColor: "#e9e9e9",
     padding: 10,
@@ -198,7 +201,7 @@ const styles = StyleSheet.create({
   arrowIcon: {
     position: "absolute",
     top: 16,
-    right: 18,
+    right: 32,
     width: 16,
     height: 16,
     zIndex: 1,
@@ -216,17 +219,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     position: "absolute",
-    bottom: 30,
+    bottom: 40,
     alignSelf: "center",
   },
   continueBtn: {
     width: "70%",
     height: 50,
-    marginVertical: 20,
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: "center",
     backgroundColor: "#d5715b",
   },
   continueBtnText: {

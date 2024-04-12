@@ -10,6 +10,7 @@ import {
 import React, { useState } from "react";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import SignupPhoneInput from "../../components/SignupPhoneInput";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const profileIcon = require("../../assets/images/Group 542x.png");
 const atIcon = require("../../assets/images/Vector2x.png");
@@ -47,92 +48,99 @@ const Signup = ({ navigation }: any) => {
   return (
     <KeyboardAvoidingWrapper>
       <View style={styles.container}>
-        <Text style={[styles.appName, { marginTop: 40 }]}>My-App</Text>
-        <Text style={styles.signup}>Signup 1 of 4</Text>
-        <Text style={styles.welcome}>Welcome!</Text>
-        <View style={styles.loginOptionsContainer}>
-          <TouchableOpacity style={styles.logoContainer}>
-            <Image source={googleLogo} style={{ width: 25, height: 25 }} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.logoContainer}>
-            <Image source={appleLogo} style={styles.logo} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.logoContainer}>
-            <Image source={fbLogo} style={styles.logo} />
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.orText}>or signup with</Text>
-        <Text style={styles.msgBox}>{msg}</Text>
+        <SafeAreaView style={[styles.container, { paddingHorizontal: 25 }]}>
+          <Text style={styles.appName}>My-App</Text>
+          <Text style={styles.signup}>Signup 1 of 4</Text>
+          <Text style={styles.welcome}>Welcome!</Text>
+          <View style={styles.loginOptionsContainer}>
+            <TouchableOpacity style={styles.logoContainer}>
+              <Image source={googleLogo} style={{ width: 25, height: 25 }} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.logoContainer}>
+              <Image source={appleLogo} style={styles.logo} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.logoContainer}>
+              <Image source={fbLogo} style={styles.logo} />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.orText}>or signup with</Text>
+          <Text style={styles.msgBox}>{msg}</Text>
 
-        <View>
-          <Image
-            source={profileIcon}
-            style={styles.inputIcon}
-            resizeMode="contain"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Full Name"
-            onChangeText={(input) => setfullName(input)}
-            value={fullName}
-          ></TextInput>
-        </View>
-        <View>
-          <Image
-            source={atIcon}
-            style={styles.inputIcon}
-            resizeMode="contain"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Email Address"
-            onChangeText={(input) => setEmail(input)}
-            value={email}
-          ></TextInput>
-        </View>
-        <SignupPhoneInput phone={phone} setPhone={setPhone} />
-        <View>
-          <Image
-            source={lockIcon}
-            style={styles.inputIcon}
-            resizeMode="contain"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            onChangeText={(input) => setPassword(input)}
-            value={password}
-          ></TextInput>
-        </View>
-        <View>
-          <Image
-            source={lockIcon}
-            style={styles.inputIcon}
-            resizeMode="contain"
-          />
-          <TextInput
-            style={[styles.input]}
-            placeholder="Re-enter Password"
-            value={passwordRetyped}
-            onChangeText={(input) => setPasswordRetyped(input)}
-          ></TextInput>
-        </View>
-        <View style={styles.btnContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text
-              style={{
-                textDecorationLine: "underline",
-                fontSize: 18,
-                fontWeight: "400",
-              }}
+          <View>
+            <Image
+              source={profileIcon}
+              style={styles.inputIcon}
+              resizeMode="contain"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Full Name"
+              onChangeText={(input) => setfullName(input)}
+              value={fullName}
+            ></TextInput>
+          </View>
+          <View>
+            <Image
+              source={atIcon}
+              style={styles.inputIcon}
+              resizeMode="contain"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Email Address"
+              onChangeText={(input) => setEmail(input)}
+              value={email}
+            ></TextInput>
+          </View>
+          <SignupPhoneInput phone={phone} setPhone={setPhone} />
+          <View>
+            <Image
+              source={lockIcon}
+              style={styles.inputIcon}
+              resizeMode="contain"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              onChangeText={(input) => setPassword(input)}
+              value={password}
+              secureTextEntry
+            ></TextInput>
+          </View>
+          <View>
+            <Image
+              source={lockIcon}
+              style={styles.inputIcon}
+              resizeMode="contain"
+            />
+            <TextInput
+              style={[styles.input]}
+              placeholder="Re-enter Password"
+              value={passwordRetyped}
+              onChangeText={(input) => setPasswordRetyped(input)}
+              secureTextEntry
+            ></TextInput>
+          </View>
+          <View style={styles.btnContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text
+                style={{
+                  textDecorationLine: "underline",
+                  fontSize: 18,
+                  fontWeight: "400",
+                }}
+              >
+                Login
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.continueBtn}
+              onPress={handleContinue}
             >
-              Login
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.continueBtn} onPress={handleContinue}>
-            <Text style={styles.continueBtnText}>Continue</Text>
-          </TouchableOpacity>
-        </View>
+              <Text style={styles.continueBtnText}>Continue</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
       </View>
     </KeyboardAvoidingWrapper>
   );
@@ -142,7 +150,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingHorizontal: 25,
     minHeight: height,
   },
   appName: {
@@ -215,19 +222,20 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   btnContainer: {
+    width: "100%",
     flexDirection: "row",
-    marginTop: 20,
     justifyContent: "space-between",
     alignItems: "center",
+    position: "absolute",
+    bottom: 40,
+    alignSelf: "center",
   },
   continueBtn: {
     width: "70%",
     height: 50,
-    marginVertical: 20,
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: "center",
     backgroundColor: "#d5715b",
   },
   continueBtnText: {

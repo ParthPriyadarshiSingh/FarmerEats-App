@@ -2,14 +2,13 @@ import {
   View,
   Text,
   StyleSheet,
-  StatusBar,
   TouchableOpacity,
   TextInput,
   Image,
 } from "react-native";
 import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const statusBarHeight = StatusBar.currentHeight || 0;
 const phoneIcon = require("../../assets/images/Vector2x-2.png");
 
 const ForgotPassword = ({ navigation }: any) => {
@@ -27,39 +26,39 @@ const ForgotPassword = ({ navigation }: any) => {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.appName, { marginTop: statusBarHeight + 40 }]}>
-        FarmerEats
-      </Text>
-      <Text style={styles.forgot}>Forgot Password?</Text>
-      <View style={{ flexDirection: "row", gap: 10, marginBottom: 40 }}>
-        <Text style={styles.remember}>Remember your password?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.loginBtn}>Login</Text>
-        </TouchableOpacity>
-      </View>
-      <View>
-        <Image
-          source={phoneIcon}
-          style={styles.inputIcon}
-          resizeMode="contain"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Phone Number"
-          maxLength={10}
-          value={phoneNumber}
-          onChangeText={(txt) => handleInputChange(txt)}
-          keyboardType="numeric"
-        ></TextInput>
-      </View>
+      <SafeAreaView style={[styles.container, { paddingHorizontal: 25 }]}>
+        <Text style={styles.appName}>FarmerEats</Text>
+        <Text style={styles.forgot}>Forgot Password?</Text>
+        <View style={{ flexDirection: "row", gap: 10, marginBottom: 40 }}>
+          <Text style={styles.remember}>Remember your password?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.loginBtn}>Login</Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Image
+            source={phoneIcon}
+            style={styles.inputIcon}
+            resizeMode="contain"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Phone Number"
+            maxLength={10}
+            value={phoneNumber}
+            onChangeText={(txt) => handleInputChange(txt)}
+            keyboardType="numeric"
+          ></TextInput>
+        </View>
 
-      <TouchableOpacity
-        style={[styles.sendCodeBtn, { opacity: isFilled ? 1 : 0.5 }]}
-        disabled={!isFilled}
-        onPress={() => navigation.navigate("OtpScreen")}
-      >
-        <Text style={styles.sendCodeBtnText}>Send Code</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.sendCodeBtn, { opacity: isFilled ? 1 : 0.5 }]}
+          disabled={!isFilled}
+          onPress={() => navigation.navigate("OtpScreen")}
+        >
+          <Text style={styles.sendCodeBtnText}>Send Code</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
     </View>
   );
 };
@@ -68,7 +67,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingHorizontal: 25,
   },
   appName: {
     fontSize: 24,
@@ -117,7 +115,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-
     backgroundColor: "#d5715b",
   },
   sendCodeBtnText: {

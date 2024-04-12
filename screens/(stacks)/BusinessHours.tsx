@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const backIcon = require("../../assets/images/Vector2x-3.png");
 
@@ -70,81 +71,83 @@ const BusinessHours = ({ navigation }: any) => {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.appName, { marginTop: 40 }]}>FarmerEats</Text>
-      <Text style={styles.page}>Signup 4 of 4</Text>
-      <Text style={styles.title}>Business Hours</Text>
-      <Text style={styles.inst}>
-        Choose the hours your farm is open for pickups. This will allow
-        customers to order deliveries.
-      </Text>
-      <View style={styles.daysBoxContainer}>
-        {days.map((value, index) => (
-          <TouchableOpacity
-            activeOpacity={0.6}
-            key={index}
-            style={[
-              styles.daysBox,
-              {
-                backgroundColor:
-                  selectedDay === index
-                    ? "#d5715b"
-                    : checkIfWeekDayUpdated(week[index])
-                    ? "#cccccc"
-                    : "#fff",
-              },
-            ]}
-            onPress={() => handleDayspress(index)}
-          >
-            <Text
+      <SafeAreaView style={[styles.container, { paddingHorizontal: 25 }]}>
+        <Text style={styles.appName}>FarmerEats</Text>
+        <Text style={styles.page}>Signup 4 of 4</Text>
+        <Text style={styles.title}>Business Hours</Text>
+        <Text style={styles.inst}>
+          Choose the hours your farm is open for pickups. This will allow
+          customers to order deliveries.
+        </Text>
+        <View style={styles.daysBoxContainer}>
+          {days.map((value, index) => (
+            <TouchableOpacity
+              activeOpacity={0.6}
+              key={index}
               style={[
-                styles.daysText,
+                styles.daysBox,
                 {
-                  color:
+                  backgroundColor:
                     selectedDay === index
-                      ? "#fff"
+                      ? "#d5715b"
                       : checkIfWeekDayUpdated(week[index])
-                      ? "#000"
-                      : "#CCCCCC",
+                      ? "#cccccc"
+                      : "#fff",
                 },
               ]}
+              onPress={() => handleDayspress(index)}
             >
-              {value.value}
-            </Text>
+              <Text
+                style={[
+                  styles.daysText,
+                  {
+                    color:
+                      selectedDay === index
+                        ? "#fff"
+                        : checkIfWeekDayUpdated(week[index])
+                        ? "#000"
+                        : "#CCCCCC",
+                  },
+                ]}
+              >
+                {value.value}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <View style={styles.timingBoxContainer}>
+          {week[selectedDay].map((value, index) => (
+            <TouchableOpacity
+              activeOpacity={0.6}
+              key={index}
+              style={[
+                styles.timingBox,
+                {
+                  backgroundColor: selectedTime[index] ? "#F8C569" : "#e9e9e9",
+                },
+              ]}
+              onPress={() => handelTimingsPress(index)}
+            >
+              <Text style={styles.timingText}>{timings[index]}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <View style={styles.btnContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image
+              source={backIcon}
+              style={{ width: 25, height: 25 }}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
-        ))}
-      </View>
-      <View style={styles.timingBoxContainer}>
-        {week[selectedDay].map((value, index) => (
           <TouchableOpacity
-            activeOpacity={0.6}
-            key={index}
-            style={[
-              styles.timingBox,
-              {
-                backgroundColor: selectedTime[index] ? "#F8C569" : "#e9e9e9",
-              },
-            ]}
-            onPress={() => handelTimingsPress(index)}
+            style={styles.signupBtn}
+            onPress={() => navigation.navigate("Confirmation")}
           >
-            <Text style={styles.timingText}>{timings[index]}</Text>
+            <Text style={styles.signupBtnText}>Signup</Text>
           </TouchableOpacity>
-        ))}
-      </View>
-      <View style={styles.btnContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={backIcon}
-            style={{ width: 25, height: 25 }}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.signupBtn}
-          onPress={() => navigation.navigate("Confirmation")}
-        >
-          <Text style={styles.signupBtnText}>Signup</Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </SafeAreaView>
     </View>
   );
 };
@@ -153,7 +156,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingHorizontal: 25,
   },
   appName: {
     fontSize: 24,
@@ -186,8 +188,8 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   daysBox: {
-    height: 40,
-    flex: 1,
+    height: 38,
+    width: 38,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
@@ -196,7 +198,7 @@ const styles = StyleSheet.create({
     borderColor: "#CCCCCC",
   },
   daysText: {
-    fontSize: 20,
+    fontSize: 22,
     color: "#CCCCCC",
   },
   timingBoxContainer: {
@@ -204,9 +206,11 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "stretch",
+    gap: 5,
   },
   timingBox: {
-    width: "48.5%",
+    width: "48%",
     height: 50,
     borderRadius: 10,
     marginBottom: 10,
@@ -224,17 +228,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     position: "absolute",
-    bottom: 30,
+    bottom: 40,
     alignSelf: "center",
   },
   signupBtn: {
     width: "70%",
     height: 50,
-    marginVertical: 20,
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: "center",
     backgroundColor: "#d5715b",
   },
   signupBtnText: {
