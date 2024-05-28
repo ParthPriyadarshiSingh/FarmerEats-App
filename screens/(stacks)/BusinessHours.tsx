@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const backIcon = require("../../assets/images/Vector2x-3.png");
+
+interface BusinessHours {
+  [key: string]: string[];
+}
 
 const days = [
   {
@@ -43,30 +47,72 @@ const timings = [
   "7:00pm - 10:00pm",
 ];
 
-const BusinessHours = ({ navigation }: any) => {
+const BusinessHours = ({ navigation, route }: any) => {
+  var { signupDetails } = route.params;
+
+  const businessHours: BusinessHours = {
+    mon: [],
+    tue: [],
+    wed: [],
+    thu: [],
+    fri: [],
+    sat: [],
+    sun: [],
+  };
+
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const [week, setWeek] = useState<boolean[][]>(
     Array.from({ length: 7 }, () => Array(5).fill(false))
   );
-  const [selectedTime, setSelectedTime] = useState<boolean[]>(
-    Array(5).fill(false)
-  );
+  // const [selectedTimes, setSelectedTimes] = useState<boolean[]>(
+  // Array(5).fill(false)
+  // );
   const handleDayspress = (index: number): void => {
-    var newWeek = week;
-    newWeek[selectedDay] = [...selectedTime];
-    setWeek(newWeek);
+    // var newWeek = week;
+    // newWeek[selectedDay] = [...selectedTimes];
+    // setWeek(newWeek);
     setSelectedDay(index);
-    setSelectedTime(week[index]);
+    // setSelectedTimes(week[index]);
   };
 
   const checkIfWeekDayUpdated = (timings: boolean[]): boolean => {
     return timings.some((value) => value === true);
   };
 
-  const handelTimingsPress = (index: number): void => {
-    const updatedSelected = [...selectedTime]; // Create a copy of the array
-    updatedSelected[index] = !updatedSelected[index]; // Toggle the value at the specified index
-    setSelectedTime(updatedSelected);
+  const handleTimingsPress = (index: number): void => {
+    // const updatedSelected = [...selectedTimes]; // Create a copy of the array
+    // updatedSelected[index] = !updatedSelected[index]; // Toggle the value at the specified index
+    // setSelectedTimes(updatedSelected);
+    setWeek((prevWeek) => {
+      const updatedWeek = prevWeek.slice();
+      updatedWeek[selectedDay][index] = !prevWeek[selectedDay][index];
+      return updatedWeek;
+    });
+    updateBusinessHours();
+  };
+
+  const updateBusinessHours = () => {
+    for (let dayIndex = 0; dayIndex < days.length; dayIndex++) {
+      const dayName = days[dayIndex].name;
+
+      for (let timeIndex = 0; timeIndex < timings.length; timeIndex++) {
+        if (week[dayIndex][timeIndex]) {
+          businessHours[dayName].push(timings[timeIndex]);
+        }
+      }
+    }
+  };
+
+  const handleSignupPress = () => {
+    updateBusinessHours();
+    console.log("week: " + week);
+    console.log("businessHours: " + businessHours);
+    const newDetails = {
+      businessHours: businessHours,
+    };
+    signupDetails = { ...signupDetails, ...newDetails };
+    console.log(signupDetails);
+    navigation.navigate("Confirmation");
   };
 
   return (
@@ -123,10 +169,10 @@ const BusinessHours = ({ navigation }: any) => {
               style={[
                 styles.timingBox,
                 {
-                  backgroundColor: selectedTime[index] ? "#F8C569" : "#e9e9e9",
+                  backgroundColor: value ? "#F8C569" : "#e9e9e9",
                 },
               ]}
-              onPress={() => handelTimingsPress(index)}
+              onPress={() => handleTimingsPress(index)}
             >
               <Text style={styles.timingText}>{timings[index]}</Text>
             </TouchableOpacity>
@@ -142,7 +188,7 @@ const BusinessHours = ({ navigation }: any) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.signupBtn}
-            onPress={() => navigation.navigate("Confirmation")}
+            onPress={handleSignupPress}
           >
             <Text style={styles.signupBtnText}>Signup</Text>
           </TouchableOpacity>

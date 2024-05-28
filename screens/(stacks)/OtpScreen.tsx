@@ -4,7 +4,7 @@ import OtpInput from "../../components/OtpInput";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const OtpScreen = ({ navigation }: any) => {
-  const otpLength = 4;
+  const otpLength = 5;
   const [isOtpFilled, setIsOtpFilled] = useState<boolean>(false);
   const [otp, setOtp] = useState<string[]>(new Array(otpLength).fill(""));
   const [otpError, setOtpError] = useState<string>("");
@@ -19,12 +19,7 @@ const OtpScreen = ({ navigation }: any) => {
   }, [otp]);
 
   const onSubmitPress = (): void => {
-    if (otp.join("") == "1234") {
-      setOtpError("");
-      navigation.navigate("Welcome");
-    } else {
-      setOtpError("Wrong OTP");
-    }
+    navigation.navigate("ResetPassword");
   };
 
   return (

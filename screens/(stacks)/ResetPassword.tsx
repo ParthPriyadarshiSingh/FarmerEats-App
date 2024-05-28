@@ -8,16 +8,16 @@ import {
 } from "react-native";
 import React from "react";
 
-const lockIcon = require("../../assets/images/Group 471x.png");
+const lockIcon = require("../../assets/images/Group 472x.png");
 
-const ResetPassword = () => {
+const ResetPassword = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
       <Text style={[styles.appName, { marginTop: 40 }]}>FarmerEats</Text>
       <Text style={styles.reset}>Reset Password</Text>
       <View style={{ flexDirection: "row", gap: 10, marginBottom: 40 }}>
         <Text style={styles.remember}>Remember your password?</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={styles.loginBtn}>Login</Text>
         </TouchableOpacity>
       </View>

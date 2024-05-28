@@ -9,15 +9,16 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
-import SignupPhoneInput from "../../components/SignupPhoneInput";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const profileIcon = require("../../assets/images/Group 542x.png");
 const atIcon = require("../../assets/images/Vector2x.png");
+const phoneIcon = require("../../assets/images/Vector2x-2.png");
+
 const lockIcon = require("../../assets/images/Group 472x.png");
 const googleLogo = require("../../assets/images/google.png");
 const appleLogo = require("../../assets/images/icons8-apple-logo 11x.png");
-const fbLogo = require("../../assets/images/Group 521x.png");
+const fbLogo = require("../../assets/images/Group 522x.png");
 const { height } = Dimensions.get("window");
 
 const Signup = ({ navigation }: any) => {
@@ -27,7 +28,95 @@ const Signup = ({ navigation }: any) => {
   const [phone, setPhone] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const [passwordRetyped, setPasswordRetyped] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isNameValid, setIsNameValid] = useState<boolean>(true);
+  const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
+  const [isPhoneValid, setIsPhoneValid] = useState<boolean>(true);
+
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
+  const [isConfirmPasswordValid, setIsConfirmPasswordValid] =
+    useState<boolean>(true);
+  const [nameError, setNameError] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+  const [phoneError, setPhoneError] = useState<string>("");
+
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
+
+  const handleNameInputChange = (text: string): void => {
+    if (text !== "") {
+      setIsNameValid(true);
+      setNameError("");
+    }
+    setfullName(text);
+  };
+
+  const handleNameBlur = (): void => {
+    if (fullName !== "") {
+      validateNameFormat();
+    }
+  };
+
+  const handleEmailInputChange = (text: string): void => {
+    if (text !== "") {
+      setIsEmailValid(true);
+      setEmailError("");
+    }
+    setEmail(text);
+  };
+
+  const handleEmailBlur = (): void => {
+    if (email !== "") {
+      validateEmailFormat();
+    }
+  };
+
+  const handlePhoneInputChange = (text: string): void => {
+    if (phone !== "") {
+      setIsPhoneValid(true);
+      setPhoneError("");
+    }
+    setPhone(text);
+  };
+
+  const handlePasswordInputChange = (text: string): void => {
+    if (text !== "") {
+      setIsPasswordValid(true);
+      setPasswordError("");
+    }
+    setPassword(text);
+  };
+
+  const handleConfirmPasswordInputChange = (text: string): void => {
+    if (text !== "") {
+      setIsConfirmPasswordValid(true);
+      setConfirmPasswordError("");
+      setMsg("");
+    }
+    setConfirmPassword(text);
+  };
+
+  const validateNameFormat = () => {
+    const nameRegex = /^[a-zA-Z ]{2,30}$/;
+    if (!nameRegex.test(fullName)) {
+      setIsNameValid(false);
+      setNameError("Invalid format");
+    } else {
+      setIsEmailValid(true);
+      setEmailError("");
+    }
+  };
+
+  const validateEmailFormat = () => {
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    if (!emailRegex.test(email)) {
+      setIsEmailValid(false);
+      setEmailError("Invalid format");
+    } else {
+      setIsEmailValid(true);
+      setEmailError("");
+    }
+  };
   const handleContinue = () => {
     var signupDetails = {
       full_name: fullName,
@@ -35,21 +124,51 @@ const Signup = ({ navigation }: any) => {
       phone: phone,
       password: password,
     };
-    if (passwordRetyped === password) {
+    if (validateSignupForm()) {
       navigation.navigate("FarmInfo", { signupDetails });
-    } else {
-      setMsg("Passwords doesn't match");
-      setTimeout(() => {
-        setMsg("");
-      }, 5000);
     }
+  };
+
+  const validateSignupForm = (): boolean => {
+    let isFormValid: boolean = true;
+    validateEmailFormat();
+    validateNameFormat();
+    if (fullName === "") {
+      setIsNameValid(false);
+      setNameError("Required");
+      isFormValid = false;
+    }
+    if (email === "") {
+      setIsEmailValid(false);
+      setEmailError("Required");
+      isFormValid = false;
+    }
+    if (phone === "") {
+      setIsPhoneValid(false);
+      setPhoneError("Required");
+    }
+    if (password === "") {
+      setIsPasswordValid(false);
+      setPasswordError("Required");
+      isFormValid = false;
+    }
+    if (confirmPassword === "") {
+      setIsConfirmPasswordValid(false);
+      setConfirmPasswordError("Required");
+      isFormValid = false;
+    }
+    if (password !== confirmPassword) {
+      setMsg("Passwords didn't match");
+      isFormValid = false;
+    }
+    return isFormValid;
   };
 
   return (
     <KeyboardAvoidingWrapper>
       <View style={styles.container}>
         <SafeAreaView style={[styles.container, { paddingHorizontal: 25 }]}>
-          <Text style={styles.appName}>My-App</Text>
+          <Text style={styles.appName}>FarmerEats</Text>
           <Text style={styles.signup}>Signup 1 of 4</Text>
           <Text style={styles.welcome}>Welcome!</Text>
           <View style={styles.loginOptionsContainer}>
@@ -64,8 +183,10 @@ const Signup = ({ navigation }: any) => {
             </TouchableOpacity>
           </View>
           <Text style={styles.orText}>or signup with</Text>
-          <Text style={styles.msgBox}>{msg}</Text>
-
+          {msg === "" ? null : <Text style={styles.msgBox}>{msg}</Text>}
+          {!isNameValid ? (
+            <Text style={{ color: "red" }}>{nameError}</Text>
+          ) : null}
           <View>
             <Image
               source={profileIcon}
@@ -73,12 +194,20 @@ const Signup = ({ navigation }: any) => {
               resizeMode="contain"
             />
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                isNameValid && { borderWidth: 0 },
+                !isNameValid && { borderWidth: 1.5 },
+              ]}
               placeholder="Full Name"
-              onChangeText={(input) => setfullName(input)}
+              onChangeText={(text) => handleNameInputChange(text)}
+              onBlur={handleNameBlur}
               value={fullName}
             ></TextInput>
           </View>
+          {!isEmailValid ? (
+            <Text style={{ color: "red" }}>{emailError}</Text>
+          ) : null}
           <View>
             <Image
               source={atIcon}
@@ -86,27 +215,43 @@ const Signup = ({ navigation }: any) => {
               resizeMode="contain"
             />
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                isEmailValid && { borderWidth: 0 },
+                !isEmailValid && { borderWidth: 1.5 },
+              ]}
               placeholder="Email Address"
-              onChangeText={(input) => setEmail(input)}
+              onChangeText={(text) => handleEmailInputChange(text)}
+              onBlur={handleEmailBlur}
               value={email}
             ></TextInput>
           </View>
-          <SignupPhoneInput phone={phone} setPhone={setPhone} />
+
+          {!isPhoneValid ? (
+            <Text style={{ color: "red" }}>{phoneError}</Text>
+          ) : null}
           <View>
             <Image
-              source={lockIcon}
+              source={phoneIcon}
               style={styles.inputIcon}
               resizeMode="contain"
             />
             <TextInput
-              style={styles.input}
-              placeholder="Password"
-              onChangeText={(input) => setPassword(input)}
-              value={password}
-              secureTextEntry
+              style={[
+                styles.input,
+                isPhoneValid && { borderWidth: 0 },
+                !isPhoneValid && { borderWidth: 1.5 },
+              ]}
+              placeholder="Phone Number"
+              maxLength={10}
+              value={phone}
+              onChangeText={(input) => handlePhoneInputChange(input)}
+              keyboardType="numeric"
             ></TextInput>
           </View>
+          {!isPasswordValid ? (
+            <Text style={{ color: "red" }}>{passwordError}</Text>
+          ) : null}
           <View>
             <Image
               source={lockIcon}
@@ -114,11 +259,34 @@ const Signup = ({ navigation }: any) => {
               resizeMode="contain"
             />
             <TextInput
-              style={[styles.input]}
+              style={[
+                styles.input,
+                isPasswordValid && { borderWidth: 0 },
+                !isPasswordValid && { borderWidth: 1.5 },
+              ]}
+              placeholder="Password"
+              onChangeText={(text) => handlePasswordInputChange(text)}
+              value={password}
+            ></TextInput>
+          </View>
+          {!isConfirmPasswordValid ? (
+            <Text style={{ color: "red" }}>{confirmPasswordError}</Text>
+          ) : null}
+          <View>
+            <Image
+              source={lockIcon}
+              style={styles.inputIcon}
+              resizeMode="contain"
+            />
+            <TextInput
+              style={[
+                styles.input,
+                isConfirmPasswordValid && { borderWidth: 0 },
+                !isConfirmPasswordValid && { borderWidth: 1.5 },
+              ]}
               placeholder="Re-enter Password"
-              value={passwordRetyped}
-              onChangeText={(input) => setPasswordRetyped(input)}
-              secureTextEntry
+              value={confirmPassword}
+              onChangeText={(input) => handleConfirmPasswordInputChange(input)}
             ></TextInput>
           </View>
           <View style={styles.btnContainer}>
@@ -216,19 +384,21 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 20,
     backgroundColor: "#e9e9e9",
-    paddingLeft: 50,
+    paddingLeft: 40,
     marginVertical: 10,
     borderRadius: 10,
+    borderColor: "red",
+    borderWidth: 0,
     zIndex: 1,
   },
   btnContainer: {
     width: "100%",
+    alignSelf: "center",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     position: "absolute",
     bottom: 40,
-    alignSelf: "center",
   },
   continueBtn: {
     width: "70%",
@@ -236,6 +406,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "center",
     backgroundColor: "#d5715b",
   },
   continueBtnText: {

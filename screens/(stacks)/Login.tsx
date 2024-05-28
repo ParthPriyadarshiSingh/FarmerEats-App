@@ -9,15 +9,14 @@ import {
 } from "react-native";
 
 import React, { useState } from "react";
-import LoginPhoneInput from "../../components/LoginPhoneInput";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const atIcon = require("../../assets/images/Vector2x-1.png");
+const atIcon = require("../../assets/images/Vector2x.png");
 const lockIcon = require("../../assets/images/Group 472x.png");
 const googleLogo = require("../../assets/images/google.png");
 const appleLogo = require("../../assets/images/icons8-apple-logo 11x.png");
-const fbLogo = require("../../assets/images/Group 521x.png");
+const fbLogo = require("../../assets/images/Group 522x.png");
 const { height } = Dimensions.get("window");
 
 const Login = ({ navigation }: any) => {
@@ -65,10 +64,6 @@ const Login = ({ navigation }: any) => {
       setIsPasswordValid(false);
       setPasswordError("Required");
     }
-  };
-
-  const onVerifyPress = (): void => {
-    navigation.navigate("OtpScreen");
   };
 
   return (
@@ -133,15 +128,6 @@ const Login = ({ navigation }: any) => {
           <TouchableOpacity style={styles.btn} onPress={onLoginPress}>
             <Text style={styles.btnText}>Login</Text>
           </TouchableOpacity>
-          <Text style={styles.orText}>or login with</Text>
-          <LoginPhoneInput
-            email={email}
-            setEmail={setEmail}
-            setPassword={setPassword}
-            setIsEmailValid={setIsEmailValid}
-            setIsPasswordValid={setIsPasswordValid}
-            onVerify={onVerifyPress}
-          />
 
           <Text style={styles.orText}>or login with</Text>
           <View style={styles.loginOptionsContainer}>

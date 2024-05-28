@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: "100%", // Adjust height as needed
+    height: "100%",
   },
   whiteContainer: {
     marginTop: -30,

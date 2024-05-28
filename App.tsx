@@ -11,7 +11,6 @@ import FarmInfo from "./screens/(stacks)/FarmInfo";
 import Verification from "./screens/(stacks)/Verification";
 import BusinessHours from "./screens/(stacks)/BusinessHours";
 import Confirmation from "./screens/(stacks)/Confirmation";
-import Welcome from "./screens/(stacks)/Welcome";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,7 +33,6 @@ export default function App() {
         <Stack.Screen name="Verification" component={Verification} />
         <Stack.Screen name="BusinessHours" component={BusinessHours} />
         <Stack.Screen name="Confirmation" component={Confirmation} />
-        <Stack.Screen name="Welcome" component={Welcome} />
       </Stack.Navigator>
     </NavigationContainer>
   );

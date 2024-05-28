@@ -15,6 +15,7 @@ const Verification = ({ navigation, route }: any) => {
   const handleContinue = () => {
     const newDetails = {
       registration_proof: file,
+      role: "farmer",
     };
     signupDetails = { ...signupDetails, ...newDetails };
     navigation.navigate("BusinessHours", { signupDetails });
@@ -156,7 +157,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    // alignSelf: "center",
     backgroundColor: "#d5715b",
   },
   continueBtnText: {
