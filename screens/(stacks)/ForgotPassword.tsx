@@ -9,18 +9,54 @@ import {
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
+
 const phoneIcon = require("../../assets/images/Vector2x-2.png");
 
 const ForgotPassword = ({ navigation }: any) => {
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
   const [isFilled, setIsFilled] = useState<boolean>(false);
+  const [msg, setMsg] = useState<string>("");
 
-  const handleInputChange = (txt: string): void => {
-    setPhoneNumber(txt);
-    if (txt.length === 10) {
+  const handleInputChange = (text: string): void => {
+    setPhone(text);
+    if (text.length === 10) {
       setIsFilled(true);
     } else {
       setIsFilled(false);
+    }
+    console.log(`+91${text}`);
+  };
+
+  const onSendCodePress = async () => {
+    const phoneDetail = {
+      mobile: `+91${phone}`,
+    };
+    try {
+      const response = await fetch(`${BASE_URL}/user/forgot-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(phoneDetail),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      for (const key in responseData) {
+        console.log(`${key}: ${responseData[key]}`);
+      }
+      if (responseData.success === true) {
+        navigation.navigate("OtpScreen");
+      } else {
+        setMsg(responseData.message);
+        setTimeout(() => {
+          setMsg("");
+        }, 5000);
+      }
+    } catch (error) {
+      console.log("Send code error: " + error);
     }
   };
 
@@ -45,16 +81,16 @@ const ForgotPassword = ({ navigation }: any) => {
             style={styles.input}
             placeholder="Phone Number"
             maxLength={10}
-            value={phoneNumber}
+            value={phone}
             onChangeText={(txt) => handleInputChange(txt)}
             keyboardType="numeric"
           ></TextInput>
         </View>
-
+        <Text style={{ color: "red", textAlign: "center" }}>{msg}</Text>
         <TouchableOpacity
           style={[styles.sendCodeBtn, { opacity: isFilled ? 1 : 0.5 }]}
           disabled={!isFilled}
-          onPress={() => navigation.navigate("OtpScreen")}
+          onPress={onSendCodePress}
         >
           <Text style={styles.sendCodeBtnText}>Send Code</Text>
         </TouchableOpacity>

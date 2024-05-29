@@ -3,8 +3,10 @@ import React, { useEffect, useState } from "react";
 import OtpInput from "../../components/OtpInput";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
+
 const OtpScreen = ({ navigation }: any) => {
-  const otpLength = 5;
+  const otpLength = 6;
   const [isOtpFilled, setIsOtpFilled] = useState<boolean>(false);
   const [otp, setOtp] = useState<string[]>(new Array(otpLength).fill(""));
   const [otpError, setOtpError] = useState<string>("");
@@ -18,8 +20,36 @@ const OtpScreen = ({ navigation }: any) => {
     }
   }, [otp]);
 
-  const onSubmitPress = (): void => {
-    navigation.navigate("ResetPassword");
+  const onSubmitPress = async () => {
+    const otpDetail = {
+      otp: otp,
+    };
+    try {
+      const response = await fetch(`${BASE_URL}/user/verify-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(otpDetail),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      for (const key in responseData) {
+        console.log(`${key}: ${responseData[key]}`);
+      }
+      if (responseData.success === true) {
+        navigation.navigate("ResetPassword");
+      } else {
+        setOtpError(responseData.message);
+        setTimeout(() => {
+          setOtpError("");
+        }, 5000);
+      }
+    } catch (error) {
+      console.log("verify otp error: " + error);
+    }
   };
 
   return (

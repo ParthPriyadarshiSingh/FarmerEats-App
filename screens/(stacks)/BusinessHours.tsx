@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
+
 const backIcon = require("../../assets/images/Vector2x-3.png");
 
 interface BusinessHours {
@@ -64,15 +66,9 @@ const BusinessHours = ({ navigation, route }: any) => {
   const [week, setWeek] = useState<boolean[][]>(
     Array.from({ length: 7 }, () => Array(5).fill(false))
   );
-  // const [selectedTimes, setSelectedTimes] = useState<boolean[]>(
-  // Array(5).fill(false)
-  // );
+
   const handleDayspress = (index: number): void => {
-    // var newWeek = week;
-    // newWeek[selectedDay] = [...selectedTimes];
-    // setWeek(newWeek);
     setSelectedDay(index);
-    // setSelectedTimes(week[index]);
   };
 
   const checkIfWeekDayUpdated = (timings: boolean[]): boolean => {
@@ -80,9 +76,6 @@ const BusinessHours = ({ navigation, route }: any) => {
   };
 
   const handleTimingsPress = (index: number): void => {
-    // const updatedSelected = [...selectedTimes]; // Create a copy of the array
-    // updatedSelected[index] = !updatedSelected[index]; // Toggle the value at the specified index
-    // setSelectedTimes(updatedSelected);
     setWeek((prevWeek) => {
       const updatedWeek = prevWeek.slice();
       updatedWeek[selectedDay][index] = !prevWeek[selectedDay][index];
@@ -103,16 +96,40 @@ const BusinessHours = ({ navigation, route }: any) => {
     }
   };
 
-  const handleSignupPress = () => {
+  const handleSignupPress = async () => {
     updateBusinessHours();
-    console.log("week: " + week);
-    console.log("businessHours: " + businessHours);
+
     const newDetails = {
       businessHours: businessHours,
+      device_token: "0imfnc8mVLWwsAawjYr4Rx-Af50DDqtly",
+      type: "email",
+      social_id: "0imfnc8mVLWwsAawjYr4Rx-Af50DDqtly",
     };
     signupDetails = { ...signupDetails, ...newDetails };
-    console.log(signupDetails);
-    navigation.navigate("Confirmation");
+
+    try {
+      const response = await fetch(`${BASE_URL}/user/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(signupDetails),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      for (const key in responseData) {
+        console.log(`${key}: ${responseData[key]}`);
+      }
+      if (responseData.success === true) {
+        navigation.navigate("Confirmation");
+      } else {
+        console.warn("Signup unsuccessful");
+      }
+    } catch (error) {
+      console.log("Signup error: " + error);
+    }
   };
 
   return (

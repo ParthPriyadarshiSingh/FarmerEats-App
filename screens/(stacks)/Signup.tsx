@@ -96,32 +96,36 @@ const Signup = ({ navigation }: any) => {
     setConfirmPassword(text);
   };
 
-  const validateNameFormat = () => {
+  const validateNameFormat = (): boolean => {
     const nameRegex = /^[a-zA-Z ]{2,30}$/;
     if (!nameRegex.test(fullName)) {
       setIsNameValid(false);
       setNameError("Invalid format");
+      return false;
     } else {
       setIsEmailValid(true);
       setEmailError("");
+      return true;
     }
   };
 
-  const validateEmailFormat = () => {
+  const validateEmailFormat = (): boolean => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     if (!emailRegex.test(email)) {
       setIsEmailValid(false);
       setEmailError("Invalid format");
+      return false;
     } else {
       setIsEmailValid(true);
       setEmailError("");
+      return true;
     }
   };
   const handleContinue = () => {
     var signupDetails = {
       full_name: fullName,
       email: email,
-      phone: phone,
+      phone: `+91${phone}`,
       password: password,
     };
     if (validateSignupForm()) {
@@ -131,8 +135,8 @@ const Signup = ({ navigation }: any) => {
 
   const validateSignupForm = (): boolean => {
     let isFormValid: boolean = true;
-    validateEmailFormat();
-    validateNameFormat();
+    isFormValid = validateEmailFormat();
+    isFormValid = validateNameFormat();
     if (fullName === "") {
       setIsNameValid(false);
       setNameError("Required");
@@ -146,6 +150,7 @@ const Signup = ({ navigation }: any) => {
     if (phone === "") {
       setIsPhoneValid(false);
       setPhoneError("Required");
+      isFormValid = false;
     }
     if (password === "") {
       setIsPasswordValid(false);

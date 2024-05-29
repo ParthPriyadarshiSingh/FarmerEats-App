@@ -12,6 +12,8 @@ import React, { useState } from "react";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
+
 const atIcon = require("../../assets/images/Vector2x.png");
 const lockIcon = require("../../assets/images/Group 472x.png");
 const googleLogo = require("../../assets/images/google.png");
@@ -43,26 +45,67 @@ const Login = ({ navigation }: any) => {
     setPassword(text);
   };
 
-  const validateEmail = () => {
+  const validateEmailFormat = (): boolean => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     if (!emailRegex.test(email)) {
       setIsEmailValid(false);
       setEmailError("Invalid format");
+      return false;
     } else {
       setIsEmailValid(true);
       setEmailError("");
+      return true;
     }
   };
 
-  const onLoginPress = (): void => {
-    validateEmail();
+  const validateLoginForm = (): boolean => {
+    let isFormValid: boolean = true;
+    isFormValid = validateEmailFormat();
     if (email === "") {
       setIsEmailValid(false);
       setEmailError("Required");
+      isFormValid = false;
     }
     if (password === "") {
       setIsPasswordValid(false);
       setPasswordError("Required");
+      isFormValid = false;
+    }
+    return isFormValid;
+  };
+
+  const onLoginPress = async () => {
+    if (validateLoginForm()) {
+      const loginDetails = {
+        email: email,
+        password: password,
+        role: "farmer",
+        device_token: "0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx",
+        type: "email",
+        social_id: "0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx",
+      };
+      try {
+        const response = await fetch(`${BASE_URL}/user/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginDetails),
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const responseData = await response.json();
+        for (const key in responseData) {
+          console.log(`${key}: ${responseData[key]}`);
+        }
+        if (responseData.success === true) {
+          console.warn("Login successful");
+          navigation.navigate("Welcome");
+        }
+      } catch (error) {
+        console.log("Login error:" + error);
+      }
     }
   };
 

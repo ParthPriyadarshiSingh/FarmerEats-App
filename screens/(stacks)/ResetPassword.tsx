@@ -6,11 +6,84 @@ import {
   TextInput,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
 const lockIcon = require("../../assets/images/Group 472x.png");
 
 const ResetPassword = ({ navigation }: any) => {
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
+  const [isConfirmPasswordValid, setIsConfirmPasswordValid] =
+    useState<boolean>(true);
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
+
+  const handlePasswordInputChange = (text: string) => {
+    if (text !== "") {
+      setIsPasswordValid(true);
+      setPasswordError("");
+    }
+    setPassword(text);
+  };
+
+  const handleConfirmPasswordInputChange = (text: string): void => {
+    if (text !== "") {
+      setIsConfirmPasswordValid(true);
+      setConfirmPasswordError("");
+    }
+    setConfirmPassword(text);
+  };
+
+  const validateResetPasswordForm = (): boolean => {
+    let isFormValid = true;
+    if (password === "") {
+      setIsPasswordValid(false);
+      setPasswordError("Required");
+      isFormValid = false;
+    }
+    if (confirmPassword === "") {
+      setIsConfirmPasswordValid(false);
+      setConfirmPasswordError("Required");
+      isFormValid = false;
+    }
+    return isFormValid;
+  };
+
+  const handleSubmitPress = async () => {
+    if (validateResetPasswordForm()) {
+      const resetPasswordDetails = {
+        token: "123456",
+        password: password,
+        cPassword: confirmPassword,
+      };
+      try {
+        const response = await fetch(`${BASE_URL}/user/reset-password`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(resetPasswordDetails),
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const responseData = await response.json();
+        for (const key in responseData) {
+          console.log(`${key}: ${responseData[key]}`);
+        }
+        if (responseData.success === true) {
+          console.warn("Password Reset");
+          navigation.navigate("Login");
+        }
+      } catch (error) {
+        console.log("reset password error:" + error);
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={[styles.appName, { marginTop: 40 }]}>FarmerEats</Text>
@@ -21,14 +94,9 @@ const ResetPassword = ({ navigation }: any) => {
           <Text style={styles.loginBtn}>Login</Text>
         </TouchableOpacity>
       </View>
-      <View>
-        <Image
-          source={lockIcon}
-          style={styles.inputIcon}
-          resizeMode="contain"
-        />
-        <TextInput style={styles.input} placeholder="New Password"></TextInput>
-      </View>
+      {!isPasswordValid ? (
+        <Text style={{ color: "red" }}>{passwordError}</Text>
+      ) : null}
       <View>
         <Image
           source={lockIcon}
@@ -36,11 +104,37 @@ const ResetPassword = ({ navigation }: any) => {
           resizeMode="contain"
         />
         <TextInput
-          style={styles.input}
-          placeholder="Confirm New Password"
+          style={[
+            styles.input,
+            isPasswordValid && { borderWidth: 0 },
+            !isPasswordValid && { borderWidth: 1.5 },
+          ]}
+          placeholder="New Password"
+          value={password}
+          onChangeText={(input) => handlePasswordInputChange(input)}
         ></TextInput>
       </View>
-      <TouchableOpacity style={styles.submitBtn}>
+      {!isConfirmPasswordValid ? (
+        <Text style={{ color: "red" }}>{confirmPasswordError}</Text>
+      ) : null}
+      <View>
+        <Image
+          source={lockIcon}
+          style={styles.inputIcon}
+          resizeMode="contain"
+        />
+        <TextInput
+          style={[
+            styles.input,
+            isConfirmPasswordValid && { borderWidth: 0 },
+            !isConfirmPasswordValid && { borderWidth: 1.5 },
+          ]}
+          placeholder="Confirm New Password"
+          value={confirmPassword}
+          onChangeText={(input) => handleConfirmPasswordInputChange(input)}
+        ></TextInput>
+      </View>
+      <TouchableOpacity style={styles.submitBtn} onPress={handleSubmitPress}>
         <Text style={styles.submitBtnText}>Submit</Text>
       </TouchableOpacity>
     </View>
