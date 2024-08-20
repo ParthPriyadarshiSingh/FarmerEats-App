@@ -106,6 +106,7 @@ const BusinessHours = ({ navigation, route }: any) => {
       social_id: "0imfnc8mVLWwsAawjYr4Rx-Af50DDqtly",
     };
     signupDetails = { ...signupDetails, ...newDetails };
+    console.log(signupDetails);
 
     try {
       const response = await fetch(`${BASE_URL}/user/register`, {

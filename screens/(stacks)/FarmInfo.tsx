@@ -26,7 +26,107 @@ const FarmInfo = ({ navigation, route }: any) => {
   const [address, setAddress] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [state, setState] = useState<string>("");
-  const [zipCode, setZipCode] = useState<number>();
+  const [zipCode, setZipCode] = useState<string>("");
+  const [isBusinessNameValid, setIsBusinessNameValid] = useState<boolean>(true);
+  const [isInformalNameValid, setIsInformalNameValid] = useState<boolean>(true);
+
+  const [isAddressValid, setIsAddressValid] = useState<boolean>(true);
+  const [isCityValid, setIsCityValid] = useState<boolean>(true);
+  const [isStateValid, setIsStateValid] = useState<boolean>(true);
+  const [isZipcodeValid, setIsZipcodeValid] = useState<boolean>(true);
+  const [businessNameError, setBusinessNameError] = useState<string>("");
+  const [informalNameError, setInformalNameError] = useState<string>("");
+  const [addressError, setAddressError] = useState<string>("");
+
+  const [cityError, setCityError] = useState<string>("");
+  const [stateError, setStateError] = useState<string>("");
+  const [zipcodeError, setZipcodeError] = useState<string>("");
+
+  const handleBusinessNameChange = (text: string): void => {
+    if (text !== "") {
+      setIsBusinessNameValid(true);
+      setBusinessNameError("");
+    }
+    setBusinessName(text);
+  };
+
+  const handleBusinessNameBlur = (): void => {
+    if (businessName !== "") {
+      validateBusinessNameFormat();
+    }
+  };
+
+  const handleInformalNameChange = (text: string): void => {
+    if (text !== "") {
+      setIsInformalNameValid(true);
+      setInformalNameError("");
+    }
+    setInformalName(text);
+  };
+
+  const handleInformalNameBlur = (): void => {
+    if (informalName !== "") {
+      validateInformalNameFormat();
+    }
+  };
+
+  const handleAddressChange = (text: string): void => {
+    if (address !== "") {
+      setIsAddressValid(true);
+      setAddressError("");
+    }
+    setAddress(text);
+  };
+
+  const handleCityChange = (text: string): void => {
+    if (city !== "") {
+      setIsCityValid(true);
+      setCityError("");
+    }
+    setCity(text);
+  };
+
+  const handleStateChange = (text: string): void => {
+    if (state !== "") {
+      setIsStateValid(true);
+      setStateError("");
+    }
+    setState(text);
+  };
+
+  const handleZipCodeChange = (text: string): void => {
+    if (zipCode !== null) {
+      setIsZipcodeValid(true);
+      setZipcodeError("");
+    }
+    setZipCode(text);
+  };
+
+  const validateBusinessNameFormat = (): boolean => {
+    const nameRegex = /^[a-zA-Z ]{2,30}$/;
+    if (!nameRegex.test(businessName)) {
+      setIsBusinessNameValid(false);
+      setBusinessNameError("Invalid format");
+      return false;
+    } else {
+      setIsBusinessNameValid(true);
+      setBusinessNameError("");
+      return true;
+    }
+  };
+
+  const validateInformalNameFormat = (): boolean => {
+    const nameRegex = /^[a-zA-Z ]{2,30}$/;
+    if (!nameRegex.test(businessName)) {
+      setIsInformalNameValid(false);
+      setInformalNameError("Invalid format");
+      return false;
+    } else {
+      setIsInformalNameValid(true);
+      setInformalNameError("");
+      return true;
+    }
+  };
 
   const handleContinue = () => {
     const newDetails = {
@@ -35,10 +135,50 @@ const FarmInfo = ({ navigation, route }: any) => {
       address: address,
       city: city,
       state: state,
-      zip_code: zipCode,
+      zip_code: +zipCode,
     };
-    signupDetails = { ...signupDetails, ...newDetails };
-    navigation.navigate("Verification", { signupDetails });
+    if (validateSignupForm()) {
+      signupDetails = { ...signupDetails, ...newDetails };
+      navigation.navigate("Verification", { signupDetails });
+    }
+  };
+
+  const validateSignupForm = (): boolean => {
+    let isFormValid: boolean = true;
+    isFormValid = validateBusinessNameFormat();
+    isFormValid = validateInformalNameFormat();
+    if (businessName === "") {
+      setIsBusinessNameValid(false);
+      setBusinessNameError("Required");
+      isFormValid = false;
+    }
+    if (informalName === "") {
+      setIsInformalNameValid(false);
+      setInformalNameError("Required");
+      isFormValid = false;
+    }
+    if (address === "") {
+      setIsAddressValid(false);
+      setAddressError("Required");
+      isFormValid = false;
+    }
+    if (city === "") {
+      setIsCityValid(false);
+      setCityError("Required");
+      isFormValid = false;
+    }
+    if (state === "") {
+      setIsStateValid(false);
+      setStateError("Required");
+      isFormValid = false;
+    }
+    if (zipCode === "") {
+      setIsZipcodeValid(false);
+      setZipcodeError("Required");
+      isFormValid = false;
+    }
+
+    return isFormValid;
   };
 
   return (
@@ -48,6 +188,9 @@ const FarmInfo = ({ navigation, route }: any) => {
           <Text style={styles.appName}>FarmerEats</Text>
           <Text style={styles.signup}>Signup 2 of 4</Text>
           <Text style={styles.farmInfo}>Farm Info</Text>
+          {!isBusinessNameValid ? (
+            <Text style={{ color: "red" }}>{businessNameError}</Text>
+          ) : null}
           <View>
             <Image
               source={tagIcon}
@@ -57,10 +200,14 @@ const FarmInfo = ({ navigation, route }: any) => {
             <TextInput
               style={styles.input}
               placeholder="Business Name"
-              onChangeText={(input) => setBusinessName(input)}
+              onChangeText={handleBusinessNameChange}
+              onBlur={handleBusinessNameBlur}
               value={businessName}
             ></TextInput>
           </View>
+          {!isInformalNameValid ? (
+            <Text style={{ color: "red" }}>{informalNameError}</Text>
+          ) : null}
           <View>
             <Image
               source={emojiIcon}
@@ -70,10 +217,14 @@ const FarmInfo = ({ navigation, route }: any) => {
             <TextInput
               style={styles.input}
               placeholder="Informal Name"
-              onChangeText={(input) => setInformalName(input)}
+              onChangeText={handleInformalNameChange}
+              onBlur={handleInformalNameBlur}
               value={informalName}
             ></TextInput>
           </View>
+          {!isAddressValid ? (
+            <Text style={{ color: "red" }}>{addressError}</Text>
+          ) : null}
           <View>
             <Image
               source={homeIcon}
@@ -83,10 +234,13 @@ const FarmInfo = ({ navigation, route }: any) => {
             <TextInput
               style={styles.input}
               placeholder="Street Address"
-              onChangeText={(input) => setAddress(input)}
+              onChangeText={handleAddressChange}
               value={address}
             ></TextInput>
           </View>
+          {!isCityValid ? (
+            <Text style={{ color: "red" }}>{cityError}</Text>
+          ) : null}
           <View>
             <Image
               source={cityIcon}
@@ -96,7 +250,7 @@ const FarmInfo = ({ navigation, route }: any) => {
             <TextInput
               style={styles.input}
               placeholder="City"
-              onChangeText={(input) => setCity(input)}
+              onChangeText={handleCityChange}
               value={city}
             ></TextInput>
           </View>
@@ -108,25 +262,35 @@ const FarmInfo = ({ navigation, route }: any) => {
             }}
           >
             <View style={{ width: "45%" }}>
-              <TextInput
-                style={styles.stateInput}
-                placeholder="State"
-                onChangeText={(input) => setState(input)}
-                value={state}
-              ></TextInput>
-              <Image
-                source={arrowIcon}
-                style={styles.arrowIcon}
-                resizeMode="contain"
-              />
+              {!isStateValid ? (
+                <Text style={{ color: "red" }}>{stateError}</Text>
+              ) : null}
+              <View>
+                <TextInput
+                  style={styles.stateInput}
+                  placeholder="State"
+                  onChangeText={handleStateChange}
+                  value={state}
+                ></TextInput>
+                <Image
+                  source={arrowIcon}
+                  style={styles.arrowIcon}
+                  resizeMode="contain"
+                />
+              </View>
             </View>
-            <TextInput
-              style={styles.zipcodeInput}
-              placeholder="Enter Zipcode"
-              keyboardType="numeric"
-              onChangeText={(input) => setZipCode(Number(input))}
-              value={zipCode?.toString()}
-            ></TextInput>
+            <View style={{ width: "55%" }}>
+              {!isZipcodeValid ? (
+                <Text style={{ color: "red" }}>{zipcodeError}</Text>
+              ) : null}
+              <TextInput
+                style={styles.zipcodeInput}
+                placeholder="Enter Zipcode"
+                keyboardType="numeric"
+                onChangeText={handleZipCodeChange}
+                value={zipCode}
+              ></TextInput>
+            </View>
           </View>
           <View style={styles.btnContainer}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -207,7 +371,6 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   zipcodeInput: {
-    width: "55%",
     height: 50,
     backgroundColor: "#e9e9e9",
     paddingHorizontal: 20,

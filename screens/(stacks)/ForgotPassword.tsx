@@ -25,13 +25,14 @@ const ForgotPassword = ({ navigation }: any) => {
     } else {
       setIsFilled(false);
     }
-    console.log(`+91${text}`);
   };
 
   const onSendCodePress = async () => {
     const phoneDetail = {
       mobile: `+91${phone}`,
     };
+    console.log(phoneDetail);
+
     try {
       const response = await fetch(`${BASE_URL}/user/forgot-password`, {
         method: "POST",

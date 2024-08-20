@@ -81,9 +81,11 @@ const Login = ({ navigation }: any) => {
         password: password,
         role: "farmer",
         device_token: "0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx",
-        type: "email",
+        type: "email/facebook/google/apple",
         social_id: "0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx",
       };
+      console.log(loginDetails);
+
       try {
         const response = await fetch(`${BASE_URL}/user/login`, {
           method: "POST",
