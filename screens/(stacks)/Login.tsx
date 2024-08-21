@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuth, useOAuth } from "@clerk/clerk-expo";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
@@ -81,7 +82,7 @@ const Login = ({ navigation }: any) => {
         password: password,
         role: "farmer",
         device_token: "0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx",
-        type: "email/facebook/google/apple",
+        type: "email",
         social_id: "0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx",
       };
       console.log(loginDetails);
@@ -110,6 +111,39 @@ const Login = ({ navigation }: any) => {
       }
     }
   };
+
+  enum Strategy {
+    Google = "oauth_google",
+    Apple = "oauth_apple",
+    Facebook = "oauth_facebook",
+  }
+
+  const { startOAuthFlow: googleAuth } = useOAuth({ strategy: "oauth_google" });
+  const { startOAuthFlow: appleAuth } = useOAuth({ strategy: "oauth_apple" });
+  const { startOAuthFlow: facebookAuth } = useOAuth({
+    strategy: "oauth_facebook",
+  });
+
+  const onSelectAuth = async (strategy: Strategy) => {
+    const selectedAuth = {
+      [Strategy.Google]: googleAuth,
+      [Strategy.Apple]: appleAuth,
+      [Strategy.Facebook]: facebookAuth,
+    }[strategy];
+
+    try {
+      const { createdSessionId, setActive } = await selectedAuth();
+
+      if (createdSessionId) {
+        setActive!({ session: createdSessionId });
+        navigation.navigate("Welcome");
+      }
+    } catch (err) {
+      console.error("OAuth error", err);
+    }
+  };
+
+  const { isSignedIn, signOut } = useAuth();
 
   return (
     <KeyboardAvoidingWrapper>
@@ -176,16 +210,35 @@ const Login = ({ navigation }: any) => {
 
           <Text style={styles.orText}>or login with</Text>
           <View style={styles.loginOptionsContainer}>
-            <TouchableOpacity style={styles.logoContainer}>
+            <TouchableOpacity
+              style={styles.logoContainer}
+              onPress={() => onSelectAuth(Strategy.Google)}
+            >
               <Image source={googleLogo} style={{ width: 25, height: 25 }} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.logoContainer}>
+            <TouchableOpacity
+              style={styles.logoContainer}
+              onPress={() => onSelectAuth(Strategy.Apple)}
+            >
               <Image source={appleLogo} style={styles.logo} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.logoContainer}>
+            <TouchableOpacity
+              style={styles.logoContainer}
+              onPress={() => onSelectAuth(Strategy.Facebook)}
+            >
               <Image source={fbLogo} style={styles.logo} />
             </TouchableOpacity>
           </View>
+          {isSignedIn && (
+            <TouchableOpacity
+              style={{ alignSelf: "center" }}
+              onPress={() => signOut()}
+            >
+              <Text style={{ fontSize: 24, marginTop: 30, color: "blue" }}>
+                Logout
+              </Text>
+            </TouchableOpacity>
+          )}
         </SafeAreaView>
       </View>
     </KeyboardAvoidingWrapper>
